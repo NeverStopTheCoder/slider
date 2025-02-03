@@ -2,6 +2,7 @@
 //%block="Slider"
 //%color=#6699ff
 //%icon=""
+//%weight=85
 namespace slider {
     let selectedSlider: Sprite = null;
     let sliders: Sprite[] = [];
