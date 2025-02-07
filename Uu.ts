@@ -1,30 +1,28 @@
 // Add your code here
-//%block="Slider"
-//%color=#6699ff
-//%icon=""
-//%weight=85
+//% block="Slider"
+//% color=#6699ff
+//% icon=""
+//% weight=85
 namespace slider {
     let selectedSlider: Sprite = null;
     let sliders: Sprite[] = [];
     let sliderBars: Sprite[] = [];
+    let sliderTexts: Sprite[] = []; // Array to store text sprites for slider values
+    let sliderOrientations: boolean[] = [];
     let movingLeft = false;
     let movingRight = false;
+    let movingUp = false;
+    let movingDown = false;
 
-    //%
-    export class Slider133 { }
-
-    /**
-     * Creates a slider with a color and width, and positions it on the screen.
-     */
-    //% block="create slider of color $color with width $sliderwidth and line color $linecolor"
+    //% block="create slider of color $color with width $sliderwidth and bar color $linecolor"
     //% blockSetVariable=Slider
-    //%group="Create"
+    //% group="Create"
     //% color.shadow="colorindexpicker"
     //% linecolor.shadow="colorindexpicker"
     export function createSlider3(color: number, sliderwidth: number, linecolor: number): Sprite {
         let sliderIndex = sliders.length;
 
-        // Create the bar for the slider
+        // Create the bar for the slider (default: horizontal)
         let barImage = image.create(sliderwidth, 5);
         barImage.fill(linecolor);
         let sliderBar = sprites.create(barImage, SpriteKind.Player);
@@ -35,64 +33,57 @@ namespace slider {
         knobImage.fill(color);
         let sliderKnob = sprites.create(knobImage, SpriteKind.Food);
         sliders.push(sliderKnob);
+        sliderOrientations.push(false); // Default is horizontal
 
         // Position the knob at the leftmost position of the bar
-        sliderKnob.x = sliderBar.x - sliderwidth / 2;
-        sliderKnob.y = sliderBar.y;
+        sliderBar.setPosition(80, 60); // Default position
+        sliderKnob.setPosition(sliderBar.x - sliderwidth / 2, sliderBar.y);
 
         return sliderKnob;
     }
 
-    /**
-     * Select the specific slider to control it.
-     */
+    //% block="set $slider to vertical"
+    //% group="Functions"
+    //% slider.shadow=variables_get
+    export function setSliderToVertical(slider: Sprite): void {
+        let index = sliders.indexOf(slider);
+        if (index !== -1) {
+            let sliderBar = sliderBars[index];
+            sliderOrientations[index] = true; // Set to vertical
+
+            let barImage = image.create(5, sliderBar.width);
+            barImage.fill(sliderBar.image.getPixel(0, 0)); // Preserve bar color
+            sliderBar.setImage(barImage);
+
+            slider.setPosition(sliderBar.x, sliderBar.y - sliderBar.height / 2);
+        }
+    }
+
     //% block="control $slider"
-     //%group="Control"
+    //% group="Control"
     //% slider.shadow=variables_get
     export function controlSlider3(slider: Sprite) {
         selectedSlider = slider;
     }
 
-    /**
-     * Set the position of the slider bar and place the knob at the left edge.
-     */
     //% block="set $slider position to X $x Y $y"
-     //%group="Functions"
+    //% group="Functions"
     //% slider.shadow=variables_get
     export function setSliderPosition3(slider: Sprite, x: number, y: number): void {
         let index = sliders.indexOf(slider);
         if (index != -1) {
             let sliderBar = sliderBars[index];
 
-            // Move the slider bar
             sliderBar.setPosition(x, y);
 
-            // Move the knob to the leftmost edge of the bar
-            slider.setPosition(x - sliderBar.width / 2, y);
+            if (sliderOrientations[index]) {
+                slider.setPosition(x, y - sliderBar.height / 2);
+            } else {
+                slider.setPosition(x - sliderBar.width / 2, y);
+            }
         }
     }
 
-    /**
-     * Check if a slider's value equals a given number.
-     */
-    //% block="if $slider value = $num"
-    //% slider.shadow=variables_get
-    //%group="Functions"
-    //% num.min=0 num.max=100
-    export function isSliderValue(slider: Sprite, num: number): boolean {
-        let index = sliders.indexOf(slider);
-        if (index == -1) return false;
-
-        let sliderBar = sliderBars[index];
-        let width = sliderBar.width;
-
-        let position = slider.x - (sliderBar.x - width / 2);
-        let value = Math.round((position / width) * 100);
-
-        return value == num;
-    }
-
-    // Control logic for movement
     controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
         movingLeft = true;
     });
@@ -109,54 +100,153 @@ namespace slider {
         movingRight = false;
     });
 
+    controller.up.onEvent(ControllerButtonEvent.Pressed, function () {
+        movingUp = true;
+    });
+
+    controller.up.onEvent(ControllerButtonEvent.Released, function () {
+        movingUp = false;
+    });
+
+    controller.down.onEvent(ControllerButtonEvent.Pressed, function () {
+        movingDown = true;
+    });
+
+    controller.down.onEvent(ControllerButtonEvent.Released, function () {
+        movingDown = false;
+    });
+
     game.onUpdate(function () {
         if (selectedSlider) {
             let index = sliders.indexOf(selectedSlider);
             if (index != -1) {
                 let sliderBar = sliderBars[index];
-                let minX = sliderBar.x - sliderBar.width / 2;
-                let maxX = sliderBar.x + sliderBar.width / 2 - 1;
 
-                if (movingLeft && selectedSlider.x > minX) {
-                    selectedSlider.x -= 0.5;
-                }
-                if (movingRight && selectedSlider.x < maxX) {
-                    selectedSlider.x += 0.5;
+                if (sliderOrientations[index]) {
+                    let minY = sliderBar.y - sliderBar.height / 2;
+                    let maxY = sliderBar.y + sliderBar.height / 2 - 1;
+
+                    if (movingUp && selectedSlider.y > minY) {
+                        selectedSlider.y -= 1;
+                    }
+                    if (movingDown && selectedSlider.y < maxY) {
+                        selectedSlider.y += 1;
+                    }
+                } else {
+                    let minX = sliderBar.x - sliderBar.width / 2;
+                    let maxX = sliderBar.x + sliderBar.width / 2 - 1;
+
+                    if (movingLeft && selectedSlider.x > minX) {
+                        selectedSlider.x -= 1;
+                    }
+                    if (movingRight && selectedSlider.x < maxX) {
+                        selectedSlider.x += 1;
+                    }
                 }
             }
         }
     });
-    /**
- * Show the value of a specific slider on the screen, scaled according to its width.
- */
+
     //% block="Show value of $slider"
     //% slider.shadow=variables_get
-    //%group="Functions"
+    //% group="Functions"
     export function showSliderValue99(slider: Sprite): void {
         let index = sliders.indexOf(slider);
         if (index != -1) {
             let sliderBar = sliderBars[index];
 
             // Create a renderable text that will follow the slider
+            let sliderText = sprites.create(image.create(1, 1), SpriteKind.Player); // Create empty sprite for text
+            sliderTexts.push(sliderText); // Store the text sprite
+
             scene.createRenderable(100, function (ctx) {
-                let position = slider.x - (sliderBar.x - sliderBar.width / 2);
-
-                // Calculate the value as a percentage of the total width
-                let value = (position / (sliderBar.width - 1)) * 100;
-
-                // Ensure the value is capped at 100 if it's rounding up
-                if (value > 100) {
-                    value = 100;
-                } else if (value < 0) {
-                    value = 0;
+                let value: number;
+                if (sliderOrientations[index]) {
+                    let position = slider.y - (sliderBar.y - sliderBar.height / 2);
+                    value = (position / (sliderBar.height - 1)) * 100;
+                } else {
+                    let position = slider.x - (sliderBar.x - sliderBar.width / 2);
+                    value = (position / (sliderBar.width - 1)) * 100;
                 }
 
-                // Round the value for cleaner display
+                if (value > 100) value = 100;
+                if (value < 0) value = 0;
+
                 value = Math.round(value);
 
-                // Draw the value on the screen above the slider
-                ctx.print(value.toString(), slider.x - 15, slider.y - 20);
+                // Create text above the slider
+                sliderText.setImage(image.create(value.toString().length * 8, 8));
+                sliderText.image.fill(0);  // Clear the image to create new text
+                sliderText.image.print(value.toString(), 0, 0);
+                sliderText.setPosition(slider.x - 15, slider.y - 20);  // Position the text above the slider
             });
         }
+    }
+
+    //% block="Hide value of $slider"
+    //% slider.shadow=variables_get
+    //% group="Functions"
+    export function hideSliderValue(slider: Sprite): void {
+        let index = sliders.indexOf(slider);
+        if (index != -1) {
+            let sliderText = sliderTexts[index];
+            sliderText.destroy();  // Destroy the text sprite
+            sliderTexts.splice(index, 1);  // Remove it from the array
+        }
+    }
+    //% block="Destroy $slider"
+    //% slider.shadow=variables_get
+    //% group="Functions"
+    export function destroySlider(slider: Sprite): void {
+        let index = sliders.indexOf(slider);
+        if (index != -1) {
+            // Destroy the slider knob and bar
+            let sliderBar = sliderBars[index];
+            sliderBar.destroy();
+            slider.destroy();  // Destroy the slider knob
+
+            // Destroy the associated text
+            let sliderText = sliderTexts[index];
+            if (sliderText) {
+                sliderText.destroy();
+                sliderTexts.splice(index, 1);  // Remove the text sprite from the array
+            }
+
+            // Remove the slider from the arrays
+            sliders.splice(index, 1);
+            sliderBars.splice(index, 1);
+            sliderOrientations.splice(index, 1);
+        }
+    }
+    //% block="get value of $slider"
+    //% slider.shadow=variables_get
+    //% group="Functions"
+    export function getSliderValue(slider: Sprite): number {
+        let index = sliders.indexOf(slider);
+        if (index !== -1) {
+            let sliderBar = sliderBars[index];
+            let value: number;
+
+            if (sliderOrientations[index]) {
+                // Vertical value calculation
+                let position = slider.y - (sliderBar.y - sliderBar.height / 2);
+                value = (position / (sliderBar.height - 1)) * 100;
+            } else {
+                // Horizontal value calculation
+                let position = slider.x - (sliderBar.x - sliderBar.width / 2);
+                value = (position / (sliderBar.width - 1)) * 100;
+            }
+
+            return Math.round(value);
+        }
+        return 0; // Default if no valid slider is found
+    }
+    //% block="if value of $slider equals $num"
+    //% slider.shadow=variables_get
+    //% num.min=0 num.max=100
+    //% group="Functions"
+    export function checkSliderValue(slider: Sprite, num: number): boolean {
+        let currentValue = getSliderValue(slider);
+        return currentValue === num;
     }
 }
