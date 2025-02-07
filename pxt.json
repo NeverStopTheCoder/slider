@@ -2,8 +2,7 @@
     "name": "Slider",
     "description": "",
     "dependencies": {
-        "device": "*",
-        "arcade-tile-util": "github:microsoft/arcade-tile-util#v1.2.0"
+        "device": "*"
     },
     "files": [
         "main.blocks",
