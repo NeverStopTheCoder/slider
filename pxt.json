@@ -23,6 +23,5 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "tsprj",
-    "icon": "https://i.postimg.cc/SNprVybs/Microsoft-Make-Code-Arcade.png"
+    "preferredEditor": "tsprj"
 }
