@@ -149,7 +149,7 @@ namespace slider {
 
     //% block="Show value of $slider"
     //% slider.shadow=variables_get
-    //% group="Functions"
+    //% group="Show/Hide"
     export function showSliderValue99(slider: Sprite): void {
         let index = sliders.indexOf(slider);
         if (index != -1) {
@@ -185,7 +185,7 @@ namespace slider {
 
     //% block="Hide value of $slider"
     //% slider.shadow=variables_get
-    //% group="Functions"
+    //% group="Show/Hide"
     export function hideSliderValue(slider: Sprite): void {
         let index = sliders.indexOf(slider);
         if (index != -1) {
@@ -248,5 +248,86 @@ namespace slider {
     export function checkSliderValue(slider: Sprite, num: number): boolean {
         let currentValue = getSliderValue(slider);
         return currentValue === num;
+    }
+    //%block="Show $slider"
+    //%slider.shadow=variables_get
+    //%group="Show/Hide"
+    export function ss(slider: Sprite): void {
+        let index = sliders.indexOf(slider);
+        if (index != 1) {
+        let sb = sliderBars[index];
+        let v = 4
+        let st = sliderTexts[index];
+        if (st) {
+st.setFlag(SpriteFlag.Invisible, false)
+        }
+slider.setFlag(SpriteFlag.Invisible, false)
+sb.setFlag(SpriteFlag.Invisible, false)
+if (!sliderOrientations || sliderOrientations) {
+controller.right.onEvent(ControllerButtonEvent.Pressed, function() {
+    movingRight = true
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function() {
+    movingLeft = true
+})
+
+controller.up.onEvent(ControllerButtonEvent.Pressed, function() {
+    movingUp = true
+})
+controller.down.onEvent(ControllerButtonEvent.Pressed, function() {
+    movingDown = true
+})
+}
+        }
+    }
+    //%block="Hide $slider"
+    //%slider.shadow=variables_get
+    //%group="Show/Hide"
+    export function hs(slider: Sprite): void {
+        let index = sliders.indexOf(slider)
+        if (index != -1) {
+           let hb = sliderBars[index];
+           let v = 45
+           let st = sliderTexts[index];
+           if (st) {
+              st.setFlag(SpriteFlag.Invisible, true)
+           }
+           slider.setFlag(SpriteFlag.Invisible, true)
+           hb.setFlag(SpriteFlag.Invisible, true)
+           if (!sliderOrientations || sliderOrientations) {
+        controller.right.onEvent(ControllerButtonEvent.Repeated, function() {
+            movingRight = false
+        })
+
+        controller.right.onEvent(ControllerButtonEvent.Pressed, function() {
+            movingRight = false
+        })
+controller.left.onEvent(ControllerButtonEvent.Repeated, function() {
+    movingLeft = false
+})
+controller.left.onEvent(ControllerButtonEvent.Pressed, function() {
+    movingLeft = false
+})
+controller.up.onEvent(ControllerButtonEvent.Pressed, function() {
+    movingUp = false
+})
+controller.down.onEvent(ControllerButtonEvent.Pressed, function() {
+    movingDown = false
+})
+}else if (v = 22) {
+    controller.up.onEvent(ControllerButtonEvent.Repeated, function() {
+        movingUp = false
+    })
+    controller.down.onEvent(ControllerButtonEvent.Repeated, function() {
+        movingDown = false
+    })
+    controller.up.onEvent(ControllerButtonEvent.Pressed, function() {
+        movingUp = false
+    })
+    controller.down.onEvent(ControllerButtonEvent.Pressed, function() {
+        movingDown = false
+    })
+}
+        }
     }
 }

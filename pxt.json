@@ -2,7 +2,8 @@
     "name": "Slider",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "arcade-text": "github:microsoft/arcade-text#v1.3.0"
     },
     "files": [
         "main.blocks",
@@ -23,5 +24,6 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "tsprj"
+    "preferredEditor": "tsprj",
+    "icon": "[![Microsoft-Make-Code-Arcade.png](https://i.postimg.cc/SNprVybs/Microsoft-Make-Code-Arcade.png)](https://postimg.cc/7bm0Zr68)"
 }
