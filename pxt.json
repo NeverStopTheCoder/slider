@@ -23,6 +23,5 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "blocksprj",
-    "icon": ""
+    "preferredEditor": "blocksprj"
 }
