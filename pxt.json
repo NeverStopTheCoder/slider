@@ -2,7 +2,8 @@
     "name": "Slider",
     "description": "",
     "dependencies": {
-        "device": "*"
+        "device": "*",
+        "multiplayer": "*"
     },
     "files": [
         "main.blocks",
@@ -26,5 +27,5 @@
         "arcade"
     ],
     "preferredEditor": "tsprj",
-    "icon": "myImage"
+    "icon": "myImages/myImage"
 }
