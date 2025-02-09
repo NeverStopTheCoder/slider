@@ -2,8 +2,7 @@
     "name": "Slider",
     "description": "",
     "dependencies": {
-        "device": "*",
-        "multiplayer": "*"
+        "device": "*"
     },
     "files": [
         "main.blocks",
@@ -12,9 +11,7 @@
         "assets.json",
         "Uu.ts",
         "tilemap.g.jres",
-        "tilemap.g.ts",
-        "images.g.jres",
-        "images.g.ts"
+        "tilemap.g.ts"
     ],
     "testFiles": [
         "test.ts"
@@ -26,6 +23,6 @@
     "supportedTargets": [
         "arcade"
     ],
-    "preferredEditor": "tsprj",
-    "icon": "myImages/myImage"
+    "preferredEditor": "blocksprj",
+    "icon": ""
 }
