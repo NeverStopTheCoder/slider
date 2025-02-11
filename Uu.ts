@@ -412,4 +412,9 @@ slider.setFlag(SpriteFlag.RelativeToCamera, true)
 sb.setFlag(SpriteFlag.RelativeToCamera, true)
 
     }
+    //%block="Stop controling sliders"
+    //%group="Control"
+    export function stopcontrolingslider(): void {
+selectedSlider = null
+    }
 }
