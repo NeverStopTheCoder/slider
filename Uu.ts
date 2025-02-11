@@ -1,3 +1,19 @@
+enum Inputs {
+    //%block="A"
+    A,
+    //%block="B"
+    B,
+    //%block="Menu"
+    Menu,
+    //%block="Left"
+    Left,
+    //%block="Right"
+    Right,
+    //%block="Up"
+    Up,
+    //%block="Down"
+    Down
+}
 //% block="Slider"
 //% color=#6699ff
 //% icon=""
@@ -386,4 +402,14 @@ namespace slider {
             }
         }
     });
+    //%block="set $slider to RelativeToCamera"
+    //%slider.shadow=variables_get
+    //%group=Functions
+    export function setslidertorelativetocamera(slider: Sprite): void {
+        let index = sliders.indexOf(slider)
+        let sb = sliderBars[index]
+slider.setFlag(SpriteFlag.RelativeToCamera, true)
+sb.setFlag(SpriteFlag.RelativeToCamera, true)
+
+    }
 }
