@@ -12,7 +12,6 @@ namespace slider {
     let movingRight = false;
     let movingUp = false;
     let movingDown = false;
-
     //% block="create slider of color $color with width $sliderwidth and bar color $linecolor"
     //% blockSetVariable=Slider
     //% group="Create"
@@ -329,4 +328,62 @@ namespace slider {
             }
         }
     }
+    // Cycling through the sliders
+    //%block="Cycle through sliders"
+    //%group=Control
+    export function cycleToNextSlider(): void {
+        if (sliders.length == 0) return; // No sliders exist
+
+        // If no slider is selected, start from the first one
+        if (!selectedSlider) {
+            selectedSlider = sliders[0];
+        } else {
+            // Get the current index and cycle to the next slider
+            let index = sliders.indexOf(selectedSlider);
+            if (index != -1) {
+                index += 1;
+                if (index >= sliders.length) {
+                    index = 0; // If we reach the end, cycle back to the first one
+                }
+                selectedSlider = sliders[index];
+            }
+        }
+    }
+
+    // Trigger cycling when the A button is pressed
+    controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
+        cycleToNextSlider(); // Trigger slider cycling
+    });
+
+    // Update slider control behavior
+    game.onUpdate(function () {
+        if (selectedSlider) {
+            let index = sliders.indexOf(selectedSlider);
+            if (index != -1) {
+                let sliderBar = sliderBars[index];
+
+                if (sliderOrientations[index]) {
+                    let minY = sliderBar.y - sliderBar.height / 2;
+                    let maxY = sliderBar.y + sliderBar.height / 2 - 1;
+
+                    if (movingUp && selectedSlider.y > minY) {
+                        selectedSlider.y -= 1;
+                    }
+                    if (movingDown && selectedSlider.y < maxY) {
+                        selectedSlider.y += 1;
+                    }
+                } else {
+                    let minX = sliderBar.x - sliderBar.width / 2;
+                    let maxX = sliderBar.x + sliderBar.width / 2 - 1;
+
+                    if (movingLeft && selectedSlider.x > minX) {
+                        selectedSlider.x -= 1;
+                    }
+                    if (movingRight && selectedSlider.x < maxX) {
+                        selectedSlider.x += 1;
+                    }
+                }
+            }
+        }
+    });
 }
