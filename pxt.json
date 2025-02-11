@@ -10,9 +10,7 @@
         "main.ts",
         "README.md",
         "assets.json",
-        "Uu.ts",
-        "tilemap.g.jres",
-        "tilemap.g.ts"
+        "Uu.ts"
     ],
     "testFiles": [
         "test.ts"
