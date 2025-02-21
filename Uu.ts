@@ -28,6 +28,7 @@ namespace slider {
     let movingRight = false;
     let movingUp = false;
     let movingDown = false;
+    let cycle = 0
     //% block="create slider of color $color with width $sliderwidth and bar color $linecolor"
     //% blockSetVariable=Slider
     //% group="Create"
@@ -348,6 +349,7 @@ namespace slider {
     //%block="Cycle through sliders"
     //%group=Control
     export function cycleToNextSlider(): void {
+        cycle === 1
         if (sliders.length == 0) return; // No sliders exist
 
         // If no slider is selected, start from the first one
@@ -357,7 +359,7 @@ namespace slider {
             // Get the current index and cycle to the next slider
             let index = sliders.indexOf(selectedSlider);
             if (index != -1) {
-                index += 1;
+                index++;
                 if (index >= sliders.length) {
                     index = 0; // If we reach the end, cycle back to the first one
                 }
@@ -365,10 +367,11 @@ namespace slider {
             }
         }
     }
-
     // Trigger cycling when the A button is pressed
     controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-        cycleToNextSlider(); // Trigger slider cycling
+        if (selectedSlider !== null) {
+        cycleToNextSlider(); // Trigger slider cycling   
+        }
     });
 
     // Update slider control behavior
